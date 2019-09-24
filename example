@@ -19,8 +19,7 @@ def load_data_set(file_name):
             file_name - 文件名
         Returns:
             data_mat - 数据矩阵
-        Modify:
-            2018-10-30
+
     """
     data_mat = []
     fr = open(file_name)
@@ -43,8 +42,7 @@ def bin_split_data_set(data_set, feature, value):
         Returns:
             mat0 - 切分的数据集合0
             mat1 - 切分的数据集合1
-        Modify:
-            2018-10-30
+
     """
     mat0 = data_set[nonzero(data_set[:, feature] > value)[0], :]
     mat1 = data_set[nonzero(data_set[:, feature] <= value)[0], :]
@@ -59,8 +57,7 @@ def reg_leaf(data_set):
             data_set - 数据集合
         Returns:
             mean - 目标变量的均值
-        Modify:
-            2018-10-31
+
     """
     return mean(data_set[:, -1])
 
@@ -73,8 +70,7 @@ def reg_err(data_set):
             data_set - 数据集合
         Returns:
             var - 目标变量的总方差
-        Modify:
-            2018-10-31
+
     """
     # var()计算平方误差
     return var(data_set[:, -1]) * shape(data_set)[0]
@@ -92,8 +88,7 @@ def choose_best_split(data_set, leaf_type=reg_leaf, err_type=reg_err, ops=(1, 4)
         Returns:
             best_index - 最佳切分特征
             best_value - 最佳特征值
-        Modify:
-            2018-10-31
+
     """
     # tol_s允许的误差下降值，tol_n切分的最少样本数
     tol_s = ops[0]
@@ -145,8 +140,7 @@ def create_tree(data_set, leaf_type=reg_leaf, err_type=reg_err, ops=(1, 4)):
             ops - 包含树构建所有其他参数的元组
         Returns:
             ret_tree - 构建的回归树
-        Modify:
-            2018-10-31
+
     """
     feat, val = choose_best_split(data_set, leaf_type, err_type, ops)
     if feat == None: return val
@@ -169,8 +163,7 @@ def plot_data_set(file_name):
             file_name - 文件名
         Returns:
             无
-        Modify:
-            2018-10-31
+
     """
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
     data_mat = load_data_set(file_name)
@@ -202,8 +195,7 @@ def is_tree(obj):
             obj - 判断对象
         Returns:
             是否是一棵树
-        Modify:
-            2018-11-02
+
     """
     return (type(obj).__name__ == 'dict')
 
@@ -216,8 +208,7 @@ def get_mean(tree):
             tree - 树
         Returns:
             树的平均值
-        Modify:
-            2018-11-02
+
     """
     if is_tree(tree['right']):
         tree['right'] = get_mean(tree['right'])
@@ -235,8 +226,7 @@ def prune(tree, test_data):
             test_data - 测试集
         Returns:
             后剪枝的树
-        Modify:
-            2018-11-02
+
     """
     # 如果测试集为空，则对树进行塌陷处理
     if shape(test_data)[0] == 0:
@@ -278,8 +268,7 @@ def liner_solve(data_set):
             ws -回归系数
             x - 数据集矩阵
             y - 目标变量值矩阵
-        Modify:
-            2018-11-03
+
     """
     m, n = shape(data_set)
     # 构建大小为(m,n)和(m,1)的矩阵
@@ -308,8 +297,7 @@ def model_leaf(data_set):
             data_set - 数据集
         Returns:
             ws -回归系数
-        Modify:
-            2018-11-03
+
     """
     ws, x, y = liner_solve(data_set)
     return ws
@@ -323,8 +311,7 @@ def model_err(data_set):
             data_set - 数据集
         Returns:
             返回误差平方和，平方损失
-        Modify:
-            2018-11-03
+
     """
     ws, x, y = liner_solve(data_set)
     y_hat = x * ws
@@ -340,8 +327,7 @@ def plot_model_data_set(data_set, tree):
             tree - 模型树
         Returns:
             无
-        Modify:
-            2018-10-31
+
     """
     n = len(data_set)
     xcord = []
@@ -380,8 +366,7 @@ def reg_tree_eval(model, in_dat):
             in_dat - 输入数据
         Returns:
             回归树的叶节点为float型常量
-        Modify:
-            2018-11-12
+
     """
     return float(model)
 
@@ -395,8 +380,7 @@ def model_tree_eval(model, in_dat):
             in_dat - 输入数据
         Returns:
             浮点型的回归系数向量
-        Modify:
-            2018-11-12
+
     """
     # 获取输入数据的列数
     n = shape(in_dat)[1]
@@ -417,8 +401,7 @@ def tree_fore_cast(tree, in_data, model_eval=reg_tree_eval):
             model - 模型树模型
         Returns:
             浮点型的回归系数向量
-        Modify:
-            2018-11-13
+
     """
     # 如果当前树为叶节点，生成叶节点
     if not is_tree(tree): return model_eval(tree, in_data)
@@ -452,8 +435,7 @@ def create_fore_cast(tree, test_data, model_eval=reg_tree_eval):
             model - 模型树模型
         Returns:
             预测值
-        Modify:
-            2018-11-13
+
     """
     m = len(test_data)
     # 初始化行向量各维度值为1
@@ -472,8 +454,7 @@ def re_draw(tol_s, tol_n):
             tol_n - 切分的最少样本数
         Returns:
             无
-        Modify:
-            2018-11-14
+
     """
     # 清空之前的图像
     re_draw.f.clf()
@@ -502,8 +483,7 @@ def get_inputs():
         Returns:
             tol_s - 允许的误差下降值
             tol_n - 切分的最少样本数
-        Modify:
-            2018-11-14
+
     """
     try:
         tol_n = int(tol_n_entry.get())
@@ -531,8 +511,7 @@ def draw_new_tree():
             无
         Returns:
             无
-        Modify:
-            2018-11-14
+
     """
     # 从文本输入框中获取树创建终止条件
     tol_n, tol_s = get_inputs()
